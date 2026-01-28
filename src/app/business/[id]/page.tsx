@@ -995,6 +995,7 @@ const fetchReviews = async () => {
         .from('reviews')
         .insert({
           business_id: business?.id, // ✅ For foreign key constraint
+          business_user_id: business?.user_id, // ✅ To prevent self-review
           user_id: user?.id,
           rating,
           comment,
