@@ -246,6 +246,7 @@ export default function Header() {
                         
                         {/* Purchasing Link for Business Users */}
                         {profile?.user_type === 'business' && (
+                          <>
                           <Link href="/pricing" onClick={() => setIsProfileMenuOpen(false)}>
                             <div className="flex items-center gap-3 px-3 py-2.5 hover:bg-green-50 text-gray-700 w-full text-left transition-all rounded-lg group">
                               <div className="h-8 w-8 flex items-center justify-center bg-green-100 rounded-lg group-hover:bg-green-200 transition-colors">
@@ -254,6 +255,22 @@ export default function Header() {
                               <span className="text-sm font-medium">Purchasing</span>
                             </div>
                           </Link>
+                          <Link
+                href="/widgetusage"
+                className="relative px-2 py-1.5 lg:px-4 lg:py-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors duration-200 group"
+              >
+                <span className={`relative z-10 flex items-center gap-1.5 lg:gap-2 ${
+                  isMediumScreen ? 'text-xs' : ''
+                }`}>
+                  <Package className={`${isMediumScreen ? 'h-3.5 w-3.5' : 'h-4 w-4'}`} />
+                  <span className={isMediumScreen ? 'truncate max-w-[70px]' : ''}>
+                    {isMediumScreen ? 'Widget' : 'Widget Usage'}
+                  </span>
+                </span>
+                <span className="absolute inset-x-0 bottom-0 h-0.5 bg-green-600 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
+                <span className="absolute inset-0 bg-gray-50 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"></span>
+              </Link>
+                          </>
                         )}
                         
                         <button
