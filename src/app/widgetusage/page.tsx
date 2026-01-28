@@ -815,7 +815,135 @@ export default function ReviewsWidgetPage() {
             </div>
           )}
 
-          {/* ... rest of mobile tabs remain the same ... */}
+          {activeTab === 'stats' && (
+            <div className="space-y-6 pb-20">
+              {/* Rating Breakdown */}
+              <div className="bg-white border border-gray-200 rounded-lg p-5">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Rating Distribution</h3>
+                <div className="space-y-4">
+                  {[5, 4, 3, 2, 1].map((rating) => {
+                    const percentage = getRatingPercentage(rating);
+                    const count = ratingBreakdown[rating] || 0;
+                    return (
+                      <div key={rating} className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium text-gray-900">{rating} stars</span>
+                            {renderStars(rating, 'sm')}
+                          </div>
+                          <div className="text-sm text-gray-600">
+                            {count} ({percentage.toFixed(0)}%)
+                          </div>
+                        </div>
+                        <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                          <div
+                            style={{ width: `${percentage}%` }}
+                            className="h-full bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-full"
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* API Integration - Mobile */}
+              <div className="bg-emerald-900 text-white rounded-lg p-5">
+                <h3 className="text-lg font-semibold mb-4">API Examples</h3>
+                
+                <div className="space-y-4">
+                  <div>
+                    <div className="text-sm font-medium text-emerald-200 mb-2">JavaScript</div>
+                    <div className="bg-emerald-800 p-3 rounded overflow-x-auto">
+                      <code className="text-xs text-emerald-300">
+                        fetch('https://ahmed7241-aitimaadapi.hf.space/api/business/yourbusinessid/reviews')
+                      </code>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="text-sm font-medium text-emerald-200 mb-2">Python</div>
+                    <div className="bg-emerald-800 p-3 rounded overflow-x-auto">
+                      <code className="text-xs text-emerald-300">
+                        requests.get('https://ahmed7241-aitimaadapi.hf.space/api/business/yourbusinessid/reviews')
+                      </code>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'info' && selectedBusiness && (
+            <div className="space-y-6 pb-20">
+              {/* Business Info */}
+              <div className="bg-white border border-gray-200 rounded-lg p-5">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Business Information</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Business ID
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <code className="flex-1 px-3 py-2 bg-gray-50 text-sm font-mono border border-gray-300 rounded truncate">
+                        {selectedBusiness.id}
+                      </code>
+                      <button
+                        onClick={() => copyToClipboard(selectedBusiness.id)}
+                        className="p-2 hover:bg-gray-100 rounded"
+                        title="Copy Business ID"
+                      >
+                        {copied ? (
+                          <CheckCircle className="h-5 w-5 text-emerald-600" />
+                        ) : (
+                          <Copy className="h-5 w-5 text-gray-600" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    {selectedBusiness.email && (
+                      <div className="flex items-center gap-3">
+                        <Mail className="h-5 w-5 text-emerald-600" />
+                        <div>
+                          <div className="text-sm font-medium text-gray-700">Email</div>
+                          <div className="text-gray-900">{selectedBusiness.email}</div>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {selectedBusiness.phone && (
+                      <div className="flex items-center gap-3">
+                        <Phone className="h-5 w-5 text-emerald-600" />
+                        <div>
+                          <div className="text-sm font-medium text-gray-700">Phone</div>
+                          <div className="text-gray-900">{selectedBusiness.phone}</div>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {selectedBusiness.website && (
+                      <div className="flex items-center gap-3">
+                        <Globe className="h-5 w-5 text-emerald-600" />
+                        <div>
+                          <div className="text-sm font-medium text-gray-700">Website</div>
+                          <a 
+                            href={selectedBusiness.website} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-emerald-600 hover:text-emerald-800"
+                          >
+                            {selectedBusiness.website}
+                          </a>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Desktop Content */}
@@ -1024,6 +1152,130 @@ export default function ReviewsWidgetPage() {
                 </div>
               </div>
             )}
+
+            {/* API Integration */}
+            <div className="bg-emerald-900 text-white rounded-lg p-5">
+              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                <Globe className="h-5 w-5" />
+                API Integration
+              </h3>
+              
+              <div className="space-y-4">
+                <div>
+                  <div className="text-sm font-medium text-emerald-200 mb-2">API Endpoint</div>
+                  <div className="bg-emerald-800 p-3 rounded">
+                    <code className="text-sm text-emerald-300 break-all">
+                      GET https://ahmed7241-aitimaadapi.hf.space/api/business/{'{business_id}'}/reviews
+                    </code>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="text-sm font-medium text-emerald-200 mb-2">JavaScript Example</div>
+                  <div className="bg-emerald-800 p-3 rounded">
+                    <pre className="text-sm text-emerald-300 overflow-x-auto">
+{`// Get reviews for a business
+const businessId = "your_business_id_here";
+
+fetch(\`https://ahmed7241-aitimaadapi.hf.space/api/business/\${businessId}/reviews\`)
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      console.log('Reviews:', data.reviews);
+      // Do something with reviews
+      data.reviews.forEach(review => {
+        console.log(\`★ \${review.rating} - \${review.comment}\`);
+      });
+    } else {
+      console.error('Error:', data.detail);
+    }
+  })
+  .catch(error => console.error('Fetch error:', error));`}
+                    </pre>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="text-sm font-medium text-emerald-200 mb-2">Python Example</div>
+                  <div className="bg-emerald-800 p-3 rounded">
+                    <pre className="text-sm text-emerald-300 overflow-x-auto">
+{`import requests
+
+# Get reviews for a business
+business_id = "your_business_id_here"
+url = f"https://ahmed7241-aitimaadapi.hf.space/api/business/{business_id}/reviews"
+
+try:
+    response = requests.get(url)
+    data = response.json()
+    
+    if data.get("success"):
+        reviews = data.get("reviews", [])
+        print(f"Found {len(reviews)} reviews")
+        
+        for review in reviews:
+            print(f"★ {review['rating']} - {review['comment']}")
+    else:
+        print(f"Error: {data.get('detail', 'Unknown error')}")
+        
+except requests.exceptions.RequestException as e:
+    print(f"Request failed: {e}")`}
+                    </pre>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="text-sm font-medium text-emerald-200 mb-2">cURL Example</div>
+                  <div className="bg-emerald-800 p-3 rounded">
+                    <pre className="text-sm text-emerald-300 overflow-x-auto">
+{`# Get reviews using cURL
+curl -X GET "https://ahmed7241-aitimaadapi.hf.space/api/business/your_business_id_here/reviews"
+
+# With pretty JSON output
+curl -s "https://ahmed7241-aitimaadapi.hf.space/api/business/your_business_id_here/reviews" | python -m json.tool
+
+# Save to file
+curl -o reviews.json "https://ahmed7241-aitimaadapi.hf.space/api/business/your_business_id_here/reviews"`}
+                    </pre>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="text-sm font-medium text-emerald-200 mb-2">Node.js Example</div>
+                  <div className="bg-emerald-800 p-3 rounded">
+                    <pre className="text-sm text-emerald-300 overflow-x-auto">
+{`const axios = require('axios');
+
+async function getBusinessReviews(businessId) {
+  try {
+    const response = await axios.get(
+      \`https://ahmed7241-aitimaadapi.hf.space/api/business/\${businessId}/reviews\`
+    );
+    
+    if (response.data.success) {
+      const reviews = response.data.reviews;
+      console.log(\`Found \${reviews.length} reviews\`);
+      
+      reviews.forEach(review => {
+        console.log(\`★ \${review.rating} - \${review.comment}\`);
+      });
+      
+      return reviews;
+    } else {
+      console.error('API Error:', response.data.detail);
+    }
+  } catch (error) {
+    console.error('Request failed:', error.message);
+  }
+}
+
+// Usage
+getBusinessReviews('your_business_id_here');`}
+                    </pre>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
