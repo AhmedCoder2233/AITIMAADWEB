@@ -365,20 +365,33 @@ export default function Header() {
                         <Icon className="h-4 w-4" />
                         <span>{item.label}</span>
                       </Link>
+                      
                     );
                   })}
                   
                   {/* Purchasing Link - Only for Business Users */}
                   {profile?.user_type === 'business' && (
+                    <>
                     <Link
                       href="/pricing"
                       className="flex items-center gap-3 py-2.5 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
                       onClick={() => setIsMenuOpen(false)}
-                    >
+                      >
                       <Package className="h-4 w-4" />
                       <span>Purchasing</span>
                     </Link>
+                    <Link
+                      href="/widgetusage"
+                      className="flex items-center gap-3 py-2.5 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                      >
+                      <Package className="h-4 w-4" />
+                      <span>Widget</span>
+                    </Link>
+                    
+                      </>
                   )}
+                  
                 </div>
                 
                 {/* Mobile User Section */}
