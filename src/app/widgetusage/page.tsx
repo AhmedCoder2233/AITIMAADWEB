@@ -471,16 +471,7 @@ export default function ReviewsWidgetPage() {
             <h1 className="text-lg font-semibold text-gray-900">AITIMAAD</h1>
             <p className="text-xs text-gray-600 mt-0.5">Reviews Dashboard</p>
           </div>
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="p-2 hover:bg-gray-100 rounded-lg"
-          >
-            {isMobileMenuOpen ? (
-              <X className="h-5 w-5 text-gray-600" />
-            ) : (
-              <Menu className="h-5 w-5 text-gray-600" />
-            )}
-          </button>
+        
         </div>
 
         {/* Mobile Stats Bar */}
