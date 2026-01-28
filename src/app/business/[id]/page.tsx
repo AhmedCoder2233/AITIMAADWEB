@@ -205,31 +205,31 @@ export default function BusinessPage() {
     }
   };
 
-  const fetchReviews = async () => {
-    if (!business?.user_id) return;
-    
-    try {
-      // ✅ FIXED: Use business_user_id instead of business_id
-      const { data, error } = await supabase
-        .from('reviews')
-        .select(`
-          *,
-          profiles:user_id (
-            full_name,
-            profile_url,
-            is_verified
-          )
-        `)
-        .eq('business_user_id', business.user_id) // ✅ Changed to business_user_id
-        .order('created_at', { ascending: false });
+  // Fixed fetchReviews
+const fetchReviews = async () => {
+  if (!business?.id) return;
+  
+  try {
+    // Direct business_id se filter karo
+    const { data, error } = await supabase
+      .from('reviews')
+      .select(`
+        *,
+        profiles:user_id (
+          full_name,
+          profile_url,
+          is_verified
+        )
+      `)
+      .eq('business_id', business.id) // Yeh sahi hai
+      .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      setReviews(data || []);
-    } catch (error) {
-      console.error('Error fetching reviews:', error);
-    }
-  };
-
+    if (error) throw error;
+    setReviews(data || []);
+  } catch (error) {
+    console.error('Error fetching reviews:', error);
+  }
+};
   const fetchComments = async () => {
     try {
       const { data: commentsData, error } = await supabase
@@ -927,7 +927,7 @@ export default function BusinessPage() {
       const { data: existingReview } = await supabase
         .from('reviews')
         .select('id')
-        .eq('business_user_id', business?.user_id) // ✅ business.user_id use karo
+        .eq('business_id', business?.id) // ✅ business.user_id use karo
         .eq('user_id', user?.id)
         .maybeSingle();
 
@@ -995,7 +995,6 @@ export default function BusinessPage() {
         .from('reviews')
         .insert({
           business_id: business?.id, // ✅ For foreign key constraint
-          business_user_id: business?.user_id, // ✅ For your logic (business owner ka user_id)
           user_id: user?.id,
           rating,
           comment,
