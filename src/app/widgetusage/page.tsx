@@ -34,8 +34,6 @@ import {
 } from 'lucide-react';
 
 interface Review {
-  id: string;
-  business_id: string;
   rating: number;
   comment: string;
   experience_date?: string;
@@ -43,11 +41,10 @@ interface Review {
   proof_type?: string;
   created_at: string;
   updated_at: string;
-  user_id?: string;
-  customer_name?: string;
-  customer_email?: string;
-  reply?: string;
-  reply_date?: string;
+  business_id: string;
+  business_user_id: string;
+  user_full_name: string;
+  user_avatar_url: string;
 }
 
 interface Business {
@@ -93,7 +90,7 @@ export default function ReviewsWidgetPage() {
   // Filter reviews based on search query
   const filteredReviews = reviews.filter(review =>
     review.comment?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    review.customer_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    review.user_full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     review.rating.toString().includes(searchQuery)
   );
 
@@ -284,6 +281,14 @@ export default function ReviewsWidgetPage() {
   const handleBusinessSelect = (business: Business) => {
     setSelectedBusiness(business);
     setShowBusinessDropdown(false);
+  };
+
+  // Get user initials for avatar
+  const getUserInitials = (fullName: string) => {
+    if (!fullName) return 'U';
+    const names = fullName.split(' ');
+    if (names.length === 1) return names[0][0].toUpperCase();
+    return `${names[0][0]}${names[names.length - 1][0]}`.toUpperCase();
   };
 
   // Non-business user UI
@@ -630,17 +635,34 @@ export default function ReviewsWidgetPage() {
                 <div className="space-y-4">
                   {filteredReviews.map((review, index) => (
                     <div 
-                      key={review.id}
+                      key={`${review.business_user_id}-${index}`}
                       className="bg-white border border-gray-200 rounded-lg p-4"
                     >
                       <div className="flex items-start justify-between gap-3 mb-3">
                         <div className="flex items-center gap-3">
-                          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-50">
-                            <Users className="h-5 w-5 text-emerald-600" />
-                          </div>
+                          {review.user_avatar_url ? (
+                            <div className="w-10 h-10 rounded-full overflow-hidden bg-emerald-100 flex items-center justify-center">
+                              <img 
+                                src={review.user_avatar_url} 
+                                alt={review.user_full_name || 'User'}
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  const target = e.target as HTMLImageElement;
+                                  target.onerror = null;
+                                  target.src = `https://ui-avatars.com/api/?name=${getUserInitials(review.user_full_name)}&background=random&color=fff&bold=true`;
+                                }}
+                              />
+                            </div>
+                          ) : (
+                            <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+                              <span className="font-medium text-emerald-700">
+                                {getUserInitials(review.user_full_name)}
+                              </span>
+                            </div>
+                          )}
                           <div>
                             <div className="font-medium text-gray-900">
-                              {review.customer_name || 'Anonymous Customer'}
+                              {review.user_full_name || 'Anonymous Customer'}
                             </div>
                             <div className="flex items-center gap-2 text-sm text-gray-500">
                               {renderStars(review.rating, 'sm')}
@@ -658,7 +680,7 @@ export default function ReviewsWidgetPage() {
                         {review.experience_date && (
                           <span className="flex items-center gap-1 px-2 py-1 bg-emerald-50 text-emerald-700 rounded">
                             <Calendar className="h-3 w-3" />
-                            Visited {formatDate(review.experience_date)}
+                            Experience Date: {formatDate(review.experience_date)}
                           </span>
                         )}
                       </div>
@@ -847,17 +869,34 @@ export default function ReviewsWidgetPage() {
               <div className="space-y-4">
                 {filteredReviews.map((review, index) => (
                   <div 
-                    key={review.id}
+                    key={`${review.business_user_id}-${index}`}
                     className="bg-white border border-gray-200 rounded-lg p-5 hover:shadow-sm transition-shadow"
                   >
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center gap-3">
-                        <div className="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-50">
-                          <Users className="h-5 w-5 text-emerald-600" />
-                        </div>
+                        {review.user_avatar_url ? (
+                          <div className="w-10 h-10 rounded-full overflow-hidden bg-emerald-100 flex items-center justify-center">
+                            <img 
+                              src={review.user_avatar_url} 
+                              alt={review.user_full_name || 'User'}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.onerror = null;
+                                target.src = `https://ui-avatars.com/api/?name=${getUserInitials(review.user_full_name)}&background=random&color=fff&bold=true`;
+                              }}
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+                            <span className="font-medium text-emerald-700">
+                              {getUserInitials(review.user_full_name)}
+                            </span>
+                          </div>
+                        )}
                         <div>
                           <div className="font-medium text-gray-900">
-                            {review.customer_name || 'Anonymous Customer'}
+                            {review.user_full_name || 'Anonymous Customer'}
                           </div>
                           <div className="flex items-center gap-2 text-sm text-gray-500">
                             {renderStars(review.rating, 'sm')}
